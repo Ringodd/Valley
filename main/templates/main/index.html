@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'main/css/styles.css' %}">
+  </head>
+<body>
+    <div class="loginForm">
+      <form method="post" action="">
+        {% csrf_token %}
+        <strong style="left: 23%;position: relative;">Войдите, чтобы продолжить</strong>
+        {{form.name}}
+        {{form.password}}
+        <!--{{form.password}}-->
+        <button style="position: relative;top: 10px;width: 220px;left: 130px;" type="submit" onclick="setCookie('user',`${document.getElementById('form').value}`,14);setCookie('password',`${document.getElementById('password').value}`,14)" class="btn btn-primary">Продолжить</button>
+    </form>
+    </div>
+    
+</body>
+<script>
+
+  
+async function getSHA256Hash(str) {
+  const buf = new TextEncoder().encode(str);
+  const digest = await crypto.subtle.digest('SHA-256', buf);
+  return Array.from(new Uint8Array(digest))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+// Вот так можно этот код применить:
+getSHA256Hash('example').then(console.log); // Выведет уникальный хеш для строки 'example'
+            function getCookie(cname) {
+  let name = cname + "=";
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(';');
+  for(let i = 0; i <ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+        function setCookie(cname, cvalue, exdays) {
+
+            const d = new Date();
+            d.setTime(d.getTime() + (exdays*24*60*60*1000));
+            let expires = "expires="+ d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+</script>
+</html>

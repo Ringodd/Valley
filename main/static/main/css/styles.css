@@ -1,0 +1,21 @@
+.login{
+    width:400px;
+    margin-top: 10px;
+    margin-left: 70px;
+}
+.loginForm{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    margin: 0px auto;
+    width: 600px;
+    padding: 32px 40px;
+    background: rgb(255, 255, 255);
+    border-radius: 3px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 10px;
+    box-sizing: border-box;
+    color: var(--ds-text-subtle, #42526E)}

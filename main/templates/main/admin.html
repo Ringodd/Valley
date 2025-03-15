@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin page</title>
+</head>
+<main>
+   
+    <label for="class_id">Choose Class:</label>
+        <select name="class_id" id="class_id" onchange="getList(this.value)">
+            {% for class1 in classes %}
+
+                <option value="{{class1.0}}">{{class1.0}}</option>
+            {%endfor%}
+    </select>
+    <table style="margin-left: 100px;">
+        <tr>
+            <th>ID</th>
+            <th>Имя Пользователя</th>
+            <th>Баллы</th>
+            <th>Добавьте баллы</th>
+            <th>Отнимите баллы</th>
+        </tr>
+        
+        <div id="students"></div>
+    </table>
+</main>
+<script>
+    function getList(userclass){
+        fetch(`/ajax/data/getList/?class=${userclass}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Сеть не в порядке');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    let table = document.getElementById('students')
+                    for (el of data.students){
+                        console.log(el)
+                        table += `<tr>
+                            <td>${el[0]}</td>
+                            <td>${el[1]}</td>
+                            <td>${el[4]}</td>
+                            <td>
+                                <input 
+                                    type="number" 
+                                    min ='0'
+                                    onblur="onInputBlur(this, '{{el.id}}', true)" 
+                                    placeholder="Добавьте баллы">
+                            </td>
+                            <td>
+                                <input 
+                                    type="number"
+                                    min = '0' 
+                                    onblur="onInputBlur(this, '{{el.id}}', false)" 
+                                    placeholder="Отнимите баллы">
+                            </td>
+                        </tr>`
+
+                    }
+                }
+            ).catch(error => {
+                    console.error('Ошибка:', error);
+        }); 
+    }
+    function updatePoints(userId,count){
+        fetch(`/ajax/data/addPoints/?userId=${userId}&count=${count}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Сеть не в порядке');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    location.reload()
+                }
+            ).catch(error => {
+                    console.error('Ошибка:', error);
+        }); 
+    }
+    function onInputBlur(inputElement, userId, isAddition) {
+            const value = parseInt(inputElement.value, 10);
+            if (!isNaN(value)) {
+                if (isAddition){
+                    changeValue = '+' + value
+                }else{
+                    changeValue = '-' + value
+                }
+                updatePoints(userId, changeValue);
+            }
+            inputElement.value = ""; // Очищаем поле ввода
+    }
+</script>
+</html>
